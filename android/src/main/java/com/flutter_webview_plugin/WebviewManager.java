@@ -201,6 +201,11 @@ class WebviewManager {
                     mUploadMessageArray.onReceiveValue(null);
                 }
                 mUploadMessageArray = filePathCallback;
+                Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+                i.addCategory(Intent.CATEGORY_OPENABLE);
+                i.setType("image/*");
+                activity.startActivityForResult(Intent.createChooser(i, "File Chooser"), FILECHOOSER_RESULTCODE);
+                return true;
 
                 final String[] acceptTypes = getSafeAcceptedTypes(fileChooserParams);
                 List<Intent> intentList = new ArrayList<Intent>();
@@ -265,7 +270,7 @@ class WebviewManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return Uri.fromFile(capturedFile);
+        return FileProvider.getUriForFile(context, packageName + ".fileprovider", capturedFile);
     }
 
     private File createCapturedFile(String prefix, String suffix) throws IOException {
