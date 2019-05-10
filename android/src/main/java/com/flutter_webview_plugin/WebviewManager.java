@@ -206,40 +206,6 @@ class WebviewManager {
                 i.setType("image/*");
                 activity.startActivityForResult(Intent.createChooser(i, "File Chooser"), FILECHOOSER_RESULTCODE);
                 return true;
-
-                final String[] acceptTypes = getSafeAcceptedTypes(fileChooserParams);
-                List<Intent> intentList = new ArrayList<Intent>();
-                fileUri = null;
-                videoUri = null;
-                if (acceptsImages(acceptTypes)) {
-                    Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    fileUri = getOutputFilename(MediaStore.ACTION_IMAGE_CAPTURE);
-                    takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-                    intentList.add(takePhotoIntent);
-                }
-                if (acceptsVideo(acceptTypes)) {
-                    Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-                    videoUri = getOutputFilename(MediaStore.ACTION_VIDEO_CAPTURE);
-                    takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri);
-                    intentList.add(takeVideoIntent);
-                }
-                Intent contentSelectionIntent;
-                if (Build.VERSION.SDK_INT >= 21) {
-                    final boolean allowMultiple = fileChooserParams.getMode() == FileChooserParams.MODE_OPEN_MULTIPLE;
-                    contentSelectionIntent = fileChooserParams.createIntent();
-                    contentSelectionIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, allowMultiple);
-                } else {
-                    contentSelectionIntent = new Intent(Intent.ACTION_GET_CONTENT);
-                    contentSelectionIntent.addCategory(Intent.CATEGORY_OPENABLE);
-                    contentSelectionIntent.setType("*/*");
-                }
-                Intent[] intentArray = intentList.toArray(new Intent[intentList.size()]);
-
-                Intent chooserIntent = new Intent(Intent.ACTION_CHOOSER);
-                chooserIntent.putExtra(Intent.EXTRA_INTENT, contentSelectionIntent);
-                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray);
-                activity.startActivityForResult(chooserIntent, FILECHOOSER_RESULTCODE);
-                return true;
             }
 
             @Override
